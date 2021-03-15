@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <title>Mobile Shopping Cart</title>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link href="images/favicon.ico" rel="icon" type="image/x-icon" />
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet" />
+   <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+
+   <section>
+      <div class="container">
+         <div class="cart">
+            <div class="col-md-12 col-lg-10 mx-auto">
+               <div class="cart-item">
+                  <div class="row">
+                     <div class="col-md-7 center-item">
+                        <img src="images/product-1.png" alt="">
+                        <h5>iPhone 11 128GB Black</h5>
+                     </div>
+
+                     <div class="col-md-5 center-item">
+                        <div class="input-group number-spinner">
+                           <button id="minusPhone" class="btn btn-default">
+                              <i class="fas fa-minus"></i>
+                           </button>
+                           <input id="countPhone" type="text" class="form-control text-center" value="1" readonly>
+                           <button id="plusPhone" class="btn btn-default">
+                              <i class="fas fa-plus"></i>
+                           </button>
+                        </div>
+                        <h5>$<span id="totalPricePhone">1219</span></h5>
+                        <img id="removePhone" src="images/remove.png" alt="" class="remove-item">
+                     </div>
+                  </div>
+               </div>
+
+               <div class="cart-item">
+                  <div class="row">
+                     <div class="col-md-7 center-item mx-auto">
+                        <img src="images/product-2.png" alt="">
+                        <h5>iPhone 11 Silicone Case - Black</h5>
+                     </div>
+                     <div class="col-md-5 center-item">
+                        <div class="input-group number-spinner">
+                           <button id="minusCase" class="btn btn-default"><i class="fas fa-minus"></i></button>
+                           <input id="countCase" type="text" class="form-control text-center" value="1" readonly>
+                           <button id="plusCase" class="btn btn-default"><i class="fas fa-plus"></i></button>
+
+                        </div>
+                        <h5>$<span id="totalPriceCase">59</span></h5>
+                        <img id="removeCase" src="images/remove.png" alt="" class="remove-item">
+                     </div>
+                  </div>
+               </div>
+
+               <div class="cart-item">
+                  <div class="row">
+
+                     <div class="col-md-8">
+                        <h5>Subtotal: </h5>
+                        <h5>Tax:</h5>
+                        <h5>Total:</h5>
+                     </div>
+
+                     <div class="col-md-4 status">
+                        <h5>$<span id="subtotal">1,278</span></h5>
+                        <h5>$0</h5>
+                        <h5>$<span id="total">1,278</span></h5>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-md-12 pt-4 pb-4">
+                  <button id="checkout" type="button" class="btn btn-success check-out">Check Out</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      
+   </section>
+
+   <script>
+    const phonePrice = parseFloat(document.getElementById("totalPricePhone").innerText); // 1219, price of one unit
+    const casePrice = parseFloat(document.getElementById("totalPriceCase").innerText); // 59, price of one unit    
+    
+    clickPlus("plusPhone", "countPhone", "totalPricePhone", phonePrice);
+    clickMinus("minusPhone", "countPhone", "totalPricePhone", phonePrice);
+    clickRemove("removePhone", "totalPricePhone");
+
+    clickPlus("plusCase", "countCase", "totalPriceCase", casePrice);
+    clickMinus("minusCase", "countCase", "totalPriceCase", casePrice);
+    clickRemove("removeCase", "totalPriceCase");
+    
+    function clickPlus(buttonId, countInputId, totalPriceId, unitPrice)
+    {
+       document.getElementById(buttonId).addEventListener("click",function(){
+          let countItem = parseInt(document.getElementById(countInputId).value);
+          countItem++;
+          document.getElementById(countInputId).value = countItem;
+
+          updatePrice(totalPriceId, unitPrice);
+          updatePrice("subtotal", unitPrice, true); // comma separated
+          updatePrice("total", unitPrice, true);  // comma separated
+
+       });
+    }
+    
+    // document.getElementById("plusPhone").addEventListener("click",function(event){
+    //    var countPhone = parseInt(document.getElementById("countPhone").value);
+    //    countPhone++;
+    //    document.getElementById("countPhone").value = countPhone;
+
+    //    updatePrice("totalPricePhone", phonePrice);
+    //    updatePrice("subtotal", phonePrice, true); // comma separated
+    //    updatePrice("total", phonePrice, true);  // comma separated
+
+    // })
+
+    function clickMinus(buttonId, countInputId, totalPriceId, unitPrice)
+    {
+       document.getElementById(buttonId).addEventListener("click",function(){
+          let countItem = parseInt(document.getElementById(countInputId).value);
+          if(countItem > 1){
+             countItem--;
+             document.getElementById(countInputId).value = countItem;
+
+             updatePrice(totalPriceId, -unitPrice);
+             updatePrice("subtotal", -unitPrice, true); // comma separated
+             updatePrice("total", -unitPrice, true);  // comma separated
+          }
+          
+       });
+    }   
+
+    // document.getElementById("minusPhone").addEventListener("click",function(event){
+    //    var countPhone = parseInt(document.getElementById("countPhone").value);
+    //    if(countPhone > 1){
+    //       countPhone--;
+    //       document.getElementById("countPhone").value = countPhone;
+
+    //       updatePrice("totalPricePhone", -phonePrice);
+    //       updatePrice("subtotal", -phonePrice, true); // comma separated
+    //       updatePrice("total", -phonePrice, true);  // comma separated
+    //    }
+       
+    // })
+
+    function clickRemove(removeImgId, totalPriceId)
+    {
+       document.getElementById(removeImgId).addEventListener("click",function(){
+        let totalPriceItem = parseFloat(document.getElementById(totalPriceId).innerText);
+          updatePrice("subtotal", -totalPriceItem, true); // comma separated
+          updatePrice("total", -totalPriceItem, true);  // comma separated
+
+          let total = parseFloat(document.getElementById("total").innerText);
+          if(total == 0){
+             document.getElementById("checkout").disabled = true;
+          } 
+       });
+    }
+
+    // document.getElementById("removePhone").addEventListener("click",function(event){
+    //    var totalPricePhone = parseFloat(document.getElementById("totalPricePhone").innerText);
+    //    updatePrice("subtotal", -totalPricePhone, true); // comma separated
+    //    updatePrice("total", -totalPricePhone, true);  // comma separated
+    // })
+
+    // NOW MAKE THE CART ITEM DISAPPEAR
+    var removeButton = document.getElementsByClassName("remove-item");
+    for (let i = 0; i < removeButton.length; i++) {
+       const btn = removeButton[i];
+       btn.addEventListener("click",function(event){
+        let child = event.target.parentNode.parentNode.parentNode;
+        let parent = child.parentNode;
+          parent.removeChild(child);
+
+       })
+    }
+
+    
+
+    function updatePrice(id, unitPrice, comma)
+    {
+        let currentString = document.getElementById(id).innerText.replace(',',''); // removing comma if there is any
+        let current = parseFloat(currentString);
+        let newPrice = current + unitPrice;
+       if(comma){
+          // comma separated
+          let num = new Number(newPrice).toLocaleString("en");
+          document.getElementById(id).innerText = num;
+       }        
+       else{
+          document.getElementById(id).innerText = newPrice;
+       }
+    }
+ </script>
+</body>
+
+</html>
